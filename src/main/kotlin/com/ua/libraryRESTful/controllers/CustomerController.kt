@@ -26,61 +26,18 @@ class CustomerController(
         return ResponseEntity(customers, HttpStatus.OK)
     }
 
-    @GetMapping("/firstName/lastName")
-    fun findAllByFirstAndLastNames(
-        @RequestParam firstName: String,
-        @RequestParam lastName: String
+    @GetMapping("/search")
+    fun search(
+        @RequestParam(required = false) firstName: String?,
+        @RequestParam(required = false) lastName: String?,
+        @RequestParam(required = false) birthDate: String?,
+        @RequestParam(required = false) address: String?,
+        @RequestParam(required = false) workPlace: String?,
+        @RequestParam(required = false) passport: String?,
     ): ResponseEntity<List<CustomerEntity>> {
-        val customers = customerService.findAllByFirstAndLastNames(firstName, lastName)
+        val customers = customerService.search(firstName, lastName, birthDate,
+            address, workPlace, passport)
         return ResponseEntity(customers, HttpStatus.OK)
-    }
-
-    @GetMapping("/firstName")
-    fun findAllByFirstName(
-        @RequestParam firstName: String
-    ): ResponseEntity<List<CustomerEntity>> {
-        val customers = customerService.findAllByFirstName(firstName)
-        return ResponseEntity(customers, HttpStatus.OK)
-    }
-
-    @GetMapping("/lastName")
-    fun findAllByLastName(
-        @RequestParam lastName: String
-    ): ResponseEntity<List<CustomerEntity>> {
-        val customers = customerService.findAllByLastName(lastName)
-        return ResponseEntity(customers, HttpStatus.OK)
-    }
-
-    @GetMapping("/birthDate")
-    fun findAllByBirthDate(
-        @RequestParam birthDate: String
-    ): ResponseEntity<List<CustomerEntity>> {
-        val customers = customerService.findAllByBirthDate(birthDate)
-        return ResponseEntity(customers, HttpStatus.OK)
-    }
-
-    @GetMapping("/address")
-    fun findAllByAddress(
-        @RequestParam address: String
-    ): ResponseEntity<List<CustomerEntity>> {
-        val customers = customerService.findAllByAddress(address)
-        return ResponseEntity(customers, HttpStatus.OK)
-    }
-
-    @GetMapping("/workPlace")
-    fun findAllByWorkPlace(
-        @RequestParam workPlace: String
-    ): ResponseEntity<List<CustomerEntity>> {
-        val customers = customerService.findAllByWorckPlace(workPlace)
-        return ResponseEntity(customers, HttpStatus.OK)
-    }
-
-    @GetMapping("/passport")
-    fun findAllByPassport(
-        @RequestParam passport: String
-    ): ResponseEntity<CustomerEntity> {
-        val customer = customerService.findByPassport(passport)
-        return ResponseEntity(customer, HttpStatus.OK)
     }
 
     @PostMapping

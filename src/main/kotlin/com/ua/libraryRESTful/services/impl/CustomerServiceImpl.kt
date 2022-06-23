@@ -7,6 +7,7 @@ import com.ua.libraryRESTful.services.CustomerStrippedService
 import com.ua.libraryRESTful.util.DateService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.util.Collections
 
 @Service
 class CustomerServiceImpl(
@@ -22,36 +23,31 @@ class CustomerServiceImpl(
         return customerRepository.findAll()
     }
 
-    override fun findAllByFirstAndLastNames(
-        fisrtName: String,
-        lastName: String
-    ): List<CustomerEntity> {
-        return customerRepository.findAllByFirstNameAndLastName(fisrtName, lastName)
-    }
-
-    override fun findAllByFirstName(fisrtName: String): List<CustomerEntity> {
-        return customerRepository.findAllByFirstName(fisrtName)
-    }
-
-    override fun findAllByLastName(lastName: String): List<CustomerEntity> {
-        return customerRepository.findAllByLastName(lastName)
-    }
-
-    override fun findAllByBirthDate(birthDate: String): List<CustomerEntity> {
-        val timestamp = dateService.parseToTimestamp(birthDate)
-        return customerRepository.findAllByBirthDate(timestamp)
-    }
-
-    override fun findAllByAddress(address: String): List<CustomerEntity> {
-        return customerRepository.findAllByAddress(address)
-    }
-
-    override fun findAllByWorckPlace(workPlace: String): List<CustomerEntity> {
-        return customerRepository.findAllByWorkPlace(workPlace)
-    }
-
-    override fun findByPassport(passport: String): CustomerEntity {
-        return customerRepository.findByPassport(passport)
+    override fun search(
+        firstName: String?,
+        lastName: String?,
+        birthDate: String?,
+        address: String?,
+        workPlace: String?,
+        passport: String?
+    ): List<CustomerEntity>? {
+        if (passport != null) {
+            return Collections.singletonList(customerRepository.findByPassport(passport))
+        } else if (firstName != null && lastName != null) {
+            return customerRepository.findAllByFirstNameAndLastName(firstName, lastName)
+        } else if (firstName != null) {
+            return customerRepository.findAllByFirstName(firstName)
+        } else if (lastName != null) {
+            return customerRepository.findAllByLastName(lastName)
+        } else if (birthDate != null) {
+            val timestamp = dateService.parseToTimestamp(birthDate)
+            return customerRepository.findAllByBirthDate(timestamp)
+        } else if (address != null) {
+            return customerRepository.findAllByAddress(address)
+        } else if (workPlace != null) {
+            return customerRepository.findAllByWorkPlace(workPlace)
+        }
+        return null
     }
 
     override fun save(birthDate: String, customer: CustomerEntity): CustomerEntity {
