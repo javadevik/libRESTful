@@ -40,33 +40,16 @@ class BookController(
         return ResponseEntity(books, HttpStatus.OK)
     }
 
-    @GetMapping("/title")
-    fun findByTitle(@RequestParam title: String): ResponseEntity<BookEntity> {
-        val bookFound = bookService.findByTitle(title)
-        return ResponseEntity(bookFound, HttpStatus.OK)
-    }
-
-    @GetMapping("/genre")
-    fun findByGenre(@RequestParam genre: String): ResponseEntity<List<BookEntity>> {
-        val books = bookService.findAllByGenre(genre)
-        return ResponseEntity(books, HttpStatus.OK)
-    }
-
-    @GetMapping("/year")
-    fun findByYear(@RequestParam year: Int): ResponseEntity<List<BookEntity>> {
-        val books = bookService.findAllByYear(year)
-        return ResponseEntity(books, HttpStatus.OK)
-    }
-
-    @GetMapping("/publisher")
-    fun findByPublisher(@RequestParam publisher: String): ResponseEntity<List<BookEntity>> {
-        val books = bookService.findAllByPublisher(publisher)
-        return ResponseEntity(books, HttpStatus.OK)
-    }
-
-    @GetMapping("/numberOfPage")
-    fun findByNumberOfPage(@RequestParam numberOfPage: Int): ResponseEntity<List<BookEntity>> {
-        val books = bookService.findAllByNumberOfPage(numberOfPage)
+    @GetMapping("/search")
+    fun search(
+        @RequestParam(required = false) title: String?,
+        @RequestParam(required = false) author: String?,
+        @RequestParam(required = false) genre: String?,
+        @RequestParam(required = false) year: Int?,
+        @RequestParam(required = false) publisher: String?,
+        @RequestParam(required = false) numberOfPage: Int?
+    ): ResponseEntity<List<BookEntity>> {
+        val books = bookService.search(title, author, genre, year, publisher, numberOfPage)
         return ResponseEntity(books, HttpStatus.OK)
     }
 

@@ -6,6 +6,7 @@ import com.ua.libraryRESTful.services.BookService
 import com.ua.libraryRESTful.services.BookStrippedService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class BookServiceImpl(
@@ -24,24 +25,33 @@ class BookServiceImpl(
         return bookRepository.findAllFree()
     }
 
-    override fun findByTitle(title: String): BookEntity {
-        return bookRepository.findByTitle(title)
-    }
+    override fun search(
+        title: String?,
+        author: String?,
+        genre: String?,
+        year: Int?,
+        publisher: String?,
+        numberOfPage: Int?
+    ): List<BookEntity>? {
+        if (title != null)
+            return Collections.singletonList(bookRepository.findByTitle(title))
 
-    override fun findAllByYear(year: Int): List<BookEntity> {
-        return bookRepository.findAllByYear(year)
-    }
+        if (author != null)
+            return bookRepository.findAllByAuthor(author)
 
-    override fun findAllByGenre(genre: String): List<BookEntity> {
-        return bookRepository.findAllByGenre(genre)
-    }
+        if (genre != null)
+            return bookRepository.findAllByGenre(genre)
 
-    override fun findAllByPublisher(publisher: String): List<BookEntity> {
-        return bookRepository.findAllByPublisher(publisher)
-    }
+        if (year != null)
+            return bookRepository.findAllByYear(year)
 
-    override fun findAllByNumberOfPage(numberOfPage: Int): List<BookEntity> {
-        return bookRepository.findAllByNumberOfPage(numberOfPage)
+        if (publisher != null)
+            return bookRepository.findAllByPublisher(publisher)
+
+        if (numberOfPage != null)
+            return bookRepository.findAllByNumberOfPage(numberOfPage)
+
+        return null
     }
 
     override fun save(book: BookEntity): BookEntity {

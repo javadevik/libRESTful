@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository
 interface BookRepository : CrudRepository<BookEntity, Long> {
     override fun findAll(): List<BookEntity>
     fun findByTitle(title: String): BookEntity
+    fun findAllByAuthor(author: String): List<BookEntity>
     fun findAllByYear(year: Int): List<BookEntity>
     fun findAllByGenre(genre: String): List<BookEntity>
     fun findAllByPublisher(publisher: String): List<BookEntity>
