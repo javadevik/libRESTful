@@ -10,12 +10,15 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Sql("/init_import_customers.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql("/delete_import_customers.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class CustomerControllerTest(
     @Autowired
     private val webTestClient: WebTestClient,
@@ -23,32 +26,6 @@ class CustomerControllerTest(
     @Qualifier("mapCustomerFactory")
     private val mapFactory: MapFactory
 ) {
-
-    @BeforeEach
-    fun before() {
-        webTestClient
-            .post()
-            .uri { uriBuilder ->
-                uriBuilder.path("/customers")
-                    .queryParam("birthDate", "1994-06-18")
-                    .build()
-            }
-            .body(BodyInserters.fromValue(mapFactory.create()))
-            .exchange()
-    }
-
-    @AfterEach
-    fun after() {
-        webTestClient
-            .delete()
-            .uri { uriBuilder ->
-                uriBuilder.path("/customers")
-                    .queryParam("customerId", 1)
-                    .build()
-            }
-            .exchange()
-    }
-
     @Test
     @DisplayName("test customer creation")
     fun saveTest() {
